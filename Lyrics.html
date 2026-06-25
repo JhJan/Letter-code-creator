@@ -265,11 +265,12 @@ Un escalofrío recorre mi espalda"></textarea>
                 const block = document.createElement('div');
                 block.className = 'lyric-line inactive cursor-pointer py-1';
                 block.dataset.index = index;
-                block.innerHTML = \`
-                    <div class="text-[24px] md:text-[28px] font-bold text-white tracking-tight leading-tight mb-1.5 layer-en">\${lyric.en}</div>
-                    <div class="text-[14px] md:text-[15px] italic text-white/50 layer-pron mb-1 transition-all duration-300 \${showPron ? 'block' : 'hidden'}">\${lyric.pron}</div>
-                    <div class="text-[15px] md:text-[16px] text-white/70 layer-es transition-all duration-300 \${showEsp ? 'block' : 'hidden'}">\${lyric.es}</div>
-                \`;
+                // CORRECCIÓN: Se eliminaron las barras invertidas en las variables y los backticks.
+                block.innerHTML = `
+                    <div class="text-[24px] md:text-[28px] font-bold text-white tracking-tight leading-tight mb-1.5 layer-en">${lyric.en}</div>
+                    <div class="text-[14px] md:text-[15px] italic text-white/50 layer-pron mb-1 transition-all duration-300 ${showPron ? 'block' : 'hidden'}">${lyric.pron}</div>
+                    <div class="text-[15px] md:text-[16px] text-white/70 layer-es transition-all duration-300 ${showEsp ? 'block' : 'hidden'}">${lyric.es}</div>
+                `;
                 block.addEventListener('click', () => { block.scrollIntoView({ behavior: 'smooth', block: 'start' }); });
                 container.appendChild(block);
             });
@@ -370,14 +371,15 @@ Un escalofrío recorre mi espalda"></textarea>
                 return;
             }
 
-            // Reemplazar tokens
+            // CORRECCIÓN: Se añadió .replace(/<\\\/script>/g, '</script>') para arreglar los cierres de etiqueta del HTML
             let finalHtml = template
                 .replace(/%%TITLE%%/g, title)
                 .replace(/%%ARTIST%%/g, artist)
                 .replace(/%%COLOR%%/g, color)
                 .replace(/%%DURATION%%/g, duration)
                 .replace(/%%SECONDS%%/g, seconds)
-                .replace(/%%LYRICS_JSON%%/g, lyricsJSON);
+                .replace(/%%LYRICS_JSON%%/g, lyricsJSON)
+                .replace(/<\\\/script>/g, '</script>');
 
             // Mostrar en el Textarea
             outCode.value = finalHtml.trim();
