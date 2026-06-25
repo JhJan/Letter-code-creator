@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Generador - Spotify Lyrics Clone</title>
+    <title>Generador - Spotify Desktop UI</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <script>
@@ -34,13 +34,12 @@
 </head>
 <body class="min-h-screen flex flex-col">
 
-    <!-- Navbar -->
     <header class="bg-gray-900 border-b border-gray-800 px-6 py-4 flex items-center justify-between sticky top-0 z-50">
         <div class="flex items-center gap-3">
             <div class="w-8 h-8 bg-[#1ED760] rounded-full flex items-center justify-center text-black">
                 <i data-lucide="code-2" class="w-5 h-5"></i>
             </div>
-            <h1 class="text-xl font-bold tracking-tight">LyricsApp <span class="text-gray-400 font-normal">Generator</span></h1>
+            <h1 class="text-xl font-bold tracking-tight">LyricsApp <span class="text-gray-400 font-normal">Desktop Generator</span></h1>
         </div>
         <div class="flex items-center gap-4 text-sm font-medium text-gray-400">
             <span class="flex items-center gap-2"><i data-lucide="github" class="w-4 h-4"></i> GitHub Ready</span>
@@ -48,17 +47,14 @@
         </div>
     </header>
 
-    <!-- Main Content -->
     <main class="flex-1 grid grid-cols-1 lg:grid-cols-2 gap-0 overflow-hidden" style="height: calc(100vh - 73px);">
         
-        <!-- Columna Izquierda: Formulario -->
         <div class="p-6 overflow-y-auto border-r border-gray-800 bg-gray-950">
             <h2 class="text-lg font-semibold mb-6 flex items-center gap-2">
                 <i data-lucide="settings-2" class="w-5 h-5 text-[#1ED760]"></i> Configuración de la Canción
             </h2>
 
             <div class="space-y-5">
-                <!-- Info Básica -->
                 <div class="grid grid-cols-2 gap-4">
                     <div>
                         <label class="block text-sm font-medium text-gray-400 mb-1">Título de la Canción</label>
@@ -90,7 +86,6 @@
                     </div>
                 </div>
 
-                <!-- Letras -->
                 <div>
                     <div class="flex items-center justify-between mb-1">
                         <label class="block text-sm font-medium text-gray-400">Letras y Pronunciación</label>
@@ -117,16 +112,13 @@ Un escalofrío recorre mi espalda"></textarea>
             </div>
         </div>
 
-        <!-- Columna Derecha: Output y Guía -->
         <div class="flex flex-col bg-gray-900 border-l border-gray-800">
             
-            <!-- Tabs -->
             <div class="flex border-b border-gray-800">
                 <button class="px-6 py-3 text-sm font-medium text-white border-b-2 border-[#1ED760] bg-gray-800/50">1. Código Generado</button>
                 <button class="px-6 py-3 text-sm font-medium text-gray-400 hover:text-white transition-colors cursor-default">2. Guía para Notion</button>
             </div>
 
-            <!-- Editor de Código -->
             <div class="flex-1 relative group p-4 overflow-hidden flex flex-col">
                 <div class="flex items-center justify-between mb-2">
                     <span class="text-xs font-mono text-gray-400" id="filename-preview">cancion.html</span>
@@ -137,7 +129,6 @@ Un escalofrío recorre mi espalda"></textarea>
                 <textarea id="out-code" readonly class="flex-1 w-full bg-[#0a0f18] text-[#a5b4fc] p-4 rounded-lg font-mono text-[13px] resize-none focus:ring-0 focus:border-gray-800 leading-relaxed"></textarea>
             </div>
 
-            <!-- Instrucciones GitHub -> Notion -->
             <div class="p-6 bg-gray-950 border-t border-gray-800">
                 <h3 class="text-sm font-bold text-white flex items-center gap-2 mb-3">
                     <i data-lucide="workflow" class="w-4 h-4 text-[#1ED760]"></i> Ruta de Integración
@@ -159,14 +150,13 @@ Un escalofrío recorre mi espalda"></textarea>
         </div>
     </main>
 
-    <!-- La plantilla base de Spotify (Oculta) -->
     <script id="template-html" type="text/plain">
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>%%TITLE%% - Spotify Premium UI</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>%%TITLE%% - Spotify Desktop UI</title>
     <script src="https://cdn.tailwindcss.com"><\/script>
     <script src="https://unpkg.com/lucide@latest"><\/script>
     <style>
@@ -174,61 +164,90 @@ Un escalofrío recorre mi espalda"></textarea>
         body { font-family: 'Inter', sans-serif; background-color: #000; color: #fff; margin: 0; padding: 0; -webkit-font-smoothing: antialiased; }
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-        .lyric-line { transition: opacity 0.4s ease-in-out, transform 0.4s ease-in-out; transform-origin: left center; }
-        .lyric-line.active { opacity: 1 !important; transform: scale(1.02); }
-        .lyric-line.inactive { opacity: 0.3; transform: scale(1); }
+        .lyric-line { transition: opacity 0.4s ease-in-out, transform 0.4s ease-in-out; transform-origin: left center; scroll-margin-top: 160px; }
+        .lyric-line.active { opacity: 1 !important; transform: scale(1.03); }
+        .lyric-line.inactive { opacity: 0.25; transform: scale(1); }
         .toggle-btn.active { background-color: rgba(255, 255, 255, 0.2); color: white; border-color: transparent; }
         .toggle-btn { background-color: transparent; color: rgba(255, 255, 255, 0.5); border: 1px solid rgba(255, 255, 255, 0.3); }
-        .bg-spotify-gradient { background: linear-gradient(180deg, %%COLOR%% 0%, #121212 60%, #121212 100%); }
+        .bg-spotify-desktop-gradient { background: linear-gradient(135deg, %%COLOR%% 0%, #121212 60%, #121212 100%); }
         .icon-solid { fill: currentColor; stroke: currentColor; }
     </style>
 </head>
-<body class="flex items-center justify-center min-h-screen bg-black">
-    <div class="relative w-full max-w-[400px] h-[100dvh] sm:h-[850px] sm:rounded-[40px] overflow-hidden bg-spotify-gradient shadow-2xl flex flex-col">
-        <header class="flex items-center justify-between px-6 pt-12 pb-4 relative z-20">
-            <button class="p-2 -ml-2 text-white/80 hover:text-white active:scale-95 transition-transform"><i data-lucide="chevron-down" class="w-7 h-7"></i></button>
-            <div class="flex flex-col items-center">
-                <span class="text-xs font-bold tracking-widest text-white/80 uppercase">Letras</span>
-                <div class="flex items-center gap-2 mt-1">
-                    <button id="toggle-pron" class="toggle-btn active px-3 py-1 text-[10px] font-bold rounded-full transition-colors uppercase tracking-wider">Pron</button>
-                    <button id="toggle-esp" class="toggle-btn active px-3 py-1 text-[10px] font-bold rounded-full transition-colors uppercase tracking-wider">Esp</button>
+<body class="bg-black min-h-screen flex items-center justify-center p-0 sm:p-4 md:p-6 lg:p-8">
+    <div class="w-full max-w-[1280px] h-[100dvh] sm:h-[85vh] sm:min-h-[680px] sm:rounded-2xl overflow-hidden bg-spotify-desktop-gradient shadow-2xl flex flex-col relative">
+        <header class="w-full flex items-center justify-between px-8 py-6 relative z-20 bg-gradient-to-b from-black/40 to-transparent">
+            <div class="flex items-center gap-4">
+                <button class="p-2 bg-black/40 rounded-full text-white/80 hover:text-white transition-colors"><i data-lucide="chevron-left" class="w-6 h-6"></i></button>
+                <div class="hidden md:flex flex-col">
+                    <span class="text-xs font-bold tracking-widest text-white/60 uppercase">Reproduciendo</span>
+                    <span class="text-sm font-bold text-white">%%TITLE%%</span>
                 </div>
             </div>
-            <button class="p-2 -mr-2 text-white/80 hover:text-white active:scale-95 transition-transform"><i data-lucide="more-horizontal" class="w-7 h-7"></i></button>
+            <div class="flex items-center gap-3 bg-black/20 p-1.5 rounded-full backdrop-blur-md border border-white/5">
+                <span class="text-xs font-bold text-white/60 uppercase px-2 tracking-wider hidden sm:inline">Letras:</span>
+                <button id="toggle-pron" class="toggle-btn active px-4 py-1.5 text-xs font-bold rounded-full transition-all uppercase tracking-wider">Pronunciación</button>
+                <button id="toggle-esp" class="toggle-btn active px-4 py-1.5 text-xs font-bold rounded-full transition-all uppercase tracking-wider">Español</button>
+            </div>
+            <button class="p-2 text-white/80 hover:text-white transition-transform active:scale-95"><i data-lucide="maximize-2" class="w-5 h-5"></i></button>
         </header>
-        <main id="lyrics-container" class="flex-1 overflow-y-auto no-scrollbar px-6 pb-72 pt-8 space-y-8 relative z-10 scroll-smooth"><div id="spacer-top" class="h-10"></div></main>
-        <footer class="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black via-[#121212] to-transparent pt-24 pb-8 px-6 z-30">
-            <div class="flex items-center justify-between mb-6">
-                <div class="flex items-center gap-4">
-                    <div class="w-[56px] h-[56px] rounded flex items-center justify-center shadow-md overflow-hidden relative" style="background-color: %%COLOR%%">
-                        <svg viewBox="0 0 100 100" class="w-12 h-12 fill-black/90 mt-2">
+        <div class="flex-1 grid grid-cols-1 lg:grid-cols-12 overflow-hidden relative z-10 px-8 pb-32">
+            <div class="lg:col-span-5 flex flex-col justify-center items-center lg:items-start text-center lg:text-left pb-6 lg:pb-0 lg:pr-8 border-b lg:border-b-0 lg:border-r border-white/10">
+                <div class="w-[240px] h-[240px] md:w-[320px] md:h-[320px] rounded-xl shadow-2xl overflow-hidden relative group transition-transform duration-300 hover:scale-[1.02]" style="background-color: %%COLOR%%">
+                    <div class="w-full h-full flex items-center justify-center opacity-60">
+                        <svg viewBox="0 0 100 100" class="w-24 h-24 fill-black">
                             <circle cx="50" cy="30" r="7" /><path d="M40 45 L60 45 L55 90 L45 90 Z" /><path d="M40 45 L15 15 L22 10 L45 38 Z" /><path d="M60 45 L85 15 L78 10 L55 38 Z" />
                         </svg>
                     </div>
-                    <div class="flex flex-col"><h2 class="text-[20px] font-bold text-white leading-tight tracking-tight">%%TITLE%%</h2><p class="text-[15px] text-white/70 font-medium mt-0.5">%%ARTIST%%</p></div>
                 </div>
-                <button class="w-6 h-6 rounded-full bg-[#1ED760] flex items-center justify-center text-black active:scale-95 transition-transform hover:scale-105"><i data-lucide="check" class="w-4 h-4 stroke-[3]"></i></button>
-            </div>
-            <div class="space-y-1.5 mb-6">
-                <div id="progress-container" class="w-full h-1 bg-white/20 rounded-full cursor-pointer relative group">
-                    <div id="progress-bar" class="h-full bg-white rounded-full w-0 relative transition-all duration-75"><div class="absolute right-0 top-1/2 -translate-y-1/2 w-3 h-3 bg-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity shadow-md"></div></div>
+                <div class="mt-6 w-full max-w-[320px]">
+                    <div class="flex items-center justify-between gap-4">
+                        <div class="truncate">
+                            <h1 class="text-2xl md:text-3xl font-extrabold text-white tracking-tight truncate">%%TITLE%%</h1>
+                            <p class="text-base md:text-lg text-white/70 font-medium mt-1">%%ARTIST%%</p>
+                        </div>
+                        <button class="w-8 h-8 rounded-full bg-[#1ED760] flex items-center justify-center text-black shadow-md shrink-0 hover:scale-105 active:scale-95 transition-transform">
+                            <i data-lucide="check" class="w-5 h-5 stroke-[3]"></i>
+                        </button>
+                    </div>
                 </div>
-                <div class="flex justify-between text-[11px] font-medium text-white/60 tracking-wide font-mono"><span id="current-time">0:00</span><span id="total-time">%%DURATION%%</span></div>
             </div>
-            <div class="flex items-center justify-between mb-6 px-1">
-                <button class="text-[#1ED760] active:scale-90 transition-transform"><i data-lucide="shuffle" class="w-[22px] h-[22px] stroke-[2.5]"></i></button>
-                <button class="text-white active:scale-90 transition-transform"><i data-lucide="skip-back" class="w-9 h-9 icon-solid"></i></button>
-                <button id="play-btn" class="w-[64px] h-[64px] flex items-center justify-center bg-white rounded-full text-black hover:scale-105 active:scale-95 transition-transform shadow-xl">
-                    <i data-lucide="play" id="play-icon" class="w-8 h-8 ml-1 icon-solid"></i><i data-lucide="pause" id="pause-icon" class="w-8 h-8 hidden icon-solid"></i>
-                </button>
-                <button class="text-white active:scale-90 transition-transform"><i data-lucide="skip-forward" class="w-9 h-9 icon-solid"></i></button>
-                <button class="text-white/70 hover:text-white active:scale-90 transition-transform"><i data-lucide="timer" class="w-6 h-6"></i></button>
+            <main id="lyrics-container" class="lg:col-span-7 overflow-y-auto no-scrollbar pt-8 space-y-10 scroll-smooth pb-[30vh] lg:pl-12">
+                <div id="spacer-top" class="h-[5vh]"></div>
+            </main>
+        </div>
+        <footer class="absolute bottom-0 left-0 w-full bg-black/80 backdrop-blur-lg border-t border-white/10 py-4 px-8 z-30 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div class="hidden sm:flex items-center gap-3 w-1/4">
+                <div class="w-10 h-10 rounded overflow-hidden flex items-center justify-center" style="background-color: %%COLOR%%">
+                    <i data-lucide="music" class="w-5 h-5 text-black/50"></i>
+                </div>
+                <div class="flex flex-col truncate">
+                    <span class="text-sm font-bold text-white truncate">%%TITLE%%</span>
+                    <span class="text-xs text-white/60 truncate">%%ARTIST%%</span>
+                </div>
             </div>
-            <div class="flex justify-between items-center px-1">
-                <button class="text-white/70 hover:text-white active:scale-90 transition-transform"><i data-lucide="monitor-speaker" class="w-5 h-5"></i></button>
-                <div class="flex gap-6">
-                    <button class="text-white/70 hover:text-white active:scale-90 transition-transform"><i data-lucide="share-2" class="w-5 h-5"></i></button>
-                    <button class="text-white/70 hover:text-white active:scale-90 transition-transform"><i data-lucide="list-music" class="w-5 h-5"></i></button>
+            <div class="flex flex-col items-center gap-2 w-full sm:w-2/4 max-w-[500px]">
+                <div class="flex items-center gap-6 opacity-80">
+                    <button class="text-[#1ED760] hover:scale-105 transition-transform"><i data-lucide="shuffle" class="w-4 h-4 stroke-[2.5]"></i></button>
+                    <button class="text-white hover:text-white transition-colors"><i data-lucide="skip-back" class="w-5 h-5 icon-solid"></i></button>
+                    <button class="w-8 h-8 flex items-center justify-center bg-white rounded-full text-black hover:scale-105 transition-transform">
+                        <i data-lucide="play" class="w-4 h-4 ml-0.5 icon-solid"></i>
+                    </button>
+                    <button class="text-white hover:text-white transition-colors"><i data-lucide="skip-forward" class="w-5 h-5 icon-solid"></i></button>
+                    <button class="text-white/70 hover:text-white transition-colors"><i data-lucide="repeat" class="w-4 h-4"></i></button>
+                </div>
+                <div class="w-full flex items-center gap-3">
+                    <span class="text-[11px] font-mono text-white/50">0:00</span>
+                    <div class="flex-1 h-1 bg-white/20 rounded-full relative"><div class="h-full bg-white rounded-full w-0"></div></div>
+                    <span class="text-[11px] font-mono text-white/50">%%DURATION%%</span>
+                </div>
+            </div>
+            <div class="hidden sm:flex items-center justify-end gap-4 w-1/4 text-white/60">
+                <button class="hover:text-white transition-colors"><i data-lucide="mic-2" class="w-4 h-4 text-[#1ED760]"></i></button>
+                <button class="hover:text-white transition-colors"><i data-lucide="list-music" class="w-4 h-4"></i></button>
+                <button class="hover:text-white transition-colors"><i data-lucide="monitor-speaker" class="w-4 h-4"></i></button>
+                <div class="flex items-center gap-2 w-20">
+                    <i data-lucide="volume-2" class="w-4 h-4"></i>
+                    <div class="w-full h-1 bg-white/30 rounded-full"><div class="w-2/3 h-full bg-white rounded-full"></div></div>
                 </div>
             </div>
         </footer>
@@ -236,47 +255,51 @@ Un escalofrío recorre mi espalda"></textarea>
     <script>
         lucide.createIcons();
         const lyricsData = %%LYRICS_JSON%%;
-        let isPlaying = false; let currentTime = 0; const totalDuration = %%SECONDS%%; let timerInterval; let activeIndex = -1; let showPron = true; let showEsp = true;
-        const container = document.getElementById('lyrics-container'); const playBtn = document.getElementById('play-btn'); const playIcon = document.getElementById('play-icon'); const pauseIcon = document.getElementById('pause-icon'); const progressBar = document.getElementById('progress-bar'); const progressContainer = document.getElementById('progress-container'); const currentTimeEl = document.getElementById('current-time'); const togglePronBtn = document.getElementById('toggle-pron'); const toggleEspBtn = document.getElementById('toggle-esp');
+        let showPron = true; let showEsp = true;
+        const container = document.getElementById('lyrics-container');
+        const togglePronBtn = document.getElementById('toggle-pron');
+        const toggleEspBtn = document.getElementById('toggle-esp');
+        
         function renderLyrics() {
             lyricsData.forEach((lyric, index) => {
-                const block = document.createElement('div'); block.className = 'lyric-line inactive cursor-pointer'; block.dataset.index = index;
-                block.innerHTML = \`<div class="text-[26px] font-bold text-white tracking-tight leading-tight mb-1 layer-en">\${lyric.en}</div><div class="text-[15px] italic text-white/50 layer-pron mb-1 transition-all duration-300 \${showPron ? 'block' : 'hidden'}">\${lyric.pron}</div><div class="text-[16px] text-white/70 layer-es transition-all duration-300 \${showEsp ? 'block' : 'hidden'}">\${lyric.es}</div>\`;
-                block.addEventListener('click', () => { currentTime = lyric.time; updatePlayerUI(); syncLyrics(); if(!isPlaying) togglePlay(); });
+                const block = document.createElement('div');
+                block.className = 'lyric-line inactive cursor-pointer py-1';
+                block.dataset.index = index;
+                block.innerHTML = \`
+                    <div class="text-[24px] md:text-[28px] font-bold text-white tracking-tight leading-tight mb-1.5 layer-en">\${lyric.en}</div>
+                    <div class="text-[14px] md:text-[15px] italic text-white/50 layer-pron mb-1 transition-all duration-300 \${showPron ? 'block' : 'hidden'}">\${lyric.pron}</div>
+                    <div class="text-[15px] md:text-[16px] text-white/70 layer-es transition-all duration-300 \${showEsp ? 'block' : 'hidden'}">\${lyric.es}</div>
+                \`;
+                block.addEventListener('click', () => { block.scrollIntoView({ behavior: 'smooth', block: 'start' }); });
                 container.appendChild(block);
             });
-            const spacerBottom = document.createElement('div'); spacerBottom.className = 'h-52'; container.appendChild(spacerBottom);
         }
-        function formatTime(seconds) { const m = Math.floor(seconds / 60); const s = Math.floor(seconds % 60); return \`\${m}:\${s.toString().padStart(2, '0')}\`; }
-        function updatePlayerUI() { progressBar.style.width = \`\${(currentTime / totalDuration) * 100}%\`; currentTimeEl.textContent = formatTime(currentTime); }
-        function syncLyrics() {
-            let newActiveIndex = -1;
-            for (let i = 0; i < lyricsData.length; i++) { if (currentTime >= lyricsData[i].time) { newActiveIndex = i; } else { break; } }
-            if (newActiveIndex !== activeIndex && newActiveIndex !== -1) {
-                if (activeIndex !== -1) { const oldActive = container.children[activeIndex + 1]; oldActive.classList.remove('active'); oldActive.classList.add('inactive'); }
-                activeIndex = newActiveIndex; const newActiveEl = container.children[activeIndex + 1]; newActiveEl.classList.remove('inactive'); newActiveEl.classList.add('active');
-                newActiveEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            }
+        function updateLayersVisibility() {
+            document.querySelectorAll('.layer-pron').forEach(el => el.style.display = showPron ? 'block' : 'none');
+            document.querySelectorAll('.layer-es').forEach(el => el.style.display = showEsp ? 'block' : 'none');
         }
-        function togglePlay() {
-            isPlaying = !isPlaying;
-            if (isPlaying) {
-                playIcon.classList.add('hidden'); pauseIcon.classList.remove('hidden');
-                timerInterval = setInterval(() => { currentTime += 0.25; if (currentTime >= totalDuration) { currentTime = totalDuration; togglePlay(); } updatePlayerUI(); syncLyrics(); }, 250);
-            } else { playIcon.classList.remove('hidden'); pauseIcon.classList.add('hidden'); clearInterval(timerInterval); }
-        }
-        function updateLayersVisibility() { document.querySelectorAll('.layer-pron').forEach(el => el.style.display = showPron ? 'block' : 'none'); document.querySelectorAll('.layer-es').forEach(el => el.style.display = showEsp ? 'block' : 'none'); }
         togglePronBtn.addEventListener('click', () => { showPron = !showPron; togglePronBtn.classList.toggle('active'); updateLayersVisibility(); });
         toggleEspBtn.addEventListener('click', () => { showEsp = !showEsp; toggleEspBtn.classList.toggle('active'); updateLayersVisibility(); });
-        playBtn.addEventListener('click', togglePlay);
-        progressContainer.addEventListener('click', (e) => { const rect = progressContainer.getBoundingClientRect(); currentTime = (e.clientX - rect.left) / rect.width * totalDuration; updatePlayerUI(); syncLyrics(); });
-        renderLyrics(); updatePlayerUI(); syncLyrics();
+        
+        function initManualScrollSync() {
+            const observerOptions = { root: container, rootMargin: '-15% 0px -65% 0px', threshold: 0 };
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        document.querySelectorAll('.lyric-line').forEach(el => { el.classList.remove('active'); el.classList.add('inactive'); });
+                        entry.target.classList.remove('inactive'); entry.target.classList.add('active');
+                    }
+                });
+            }, observerOptions);
+            document.querySelectorAll('.lyric-line').forEach(line => observer.observe(line));
+        }
+        renderLyrics();
+        initManualScrollSync(); 
     <\/script>
 </body>
 </html>
     </script>
 
-    <!-- Lógica del Generador -->
     <script>
         lucide.createIcons();
 
@@ -409,3 +432,5 @@ Un escalofrío recorre mi espalda"></textarea>
         inLyrics.value = `0\nWhen I see the devil's eyes\nWuen ai si de devils ais\nCuando veo los ojos del diablo\n\n4\nA current travels down my spine\nA corrent travels daun mai spain\nUn escalofrío recorre mi espalda\n\n8\nHe found me\nJi faund mi\nÉl me encontró`;
         btnGenerate.click(); // Generar una primera vez
     </script>
+</body>
+</html>
