@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="es" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generador - Spotify Lyrics Clone</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        gray: { 850: '#1f2937', 900: '#111827', 950: '#030712' }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap');
+        body { font-family: 'Inter', sans-serif; background-color: #030712; color: #f3f4f6; }
+        .font-mono { font-family: 'Fira Code', monospace; }
+        textarea, input { background-color: #111827; border: 1px solid #374151; color: white; }
+        textarea:focus, input:focus { border-color: #1ED760; outline: none; box-shadow: 0 0 0 1px #1ED760; }
+        
+        /* Scrollbar oscura para el código */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #111827; }
+        ::-webkit-scrollbar-thumb { background: #374151; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #4B5563; }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+    <!-- Navbar -->
+    <header class="bg-gray-900 border-b border-gray-800 px-6 py-4 flex items-center justify-between sticky top-0 z-50">
+        <div class="flex items-center gap-3">
+            <div class="w-8 h-8 bg-[#1ED760] rounded-full flex items-center justify-center text-black">
+                <i data-lucide="code-2" class="w-5 h-5"></i>
+            </div>
+            <h1 class="text-xl font-bold tracking-tight">LyricsApp <span class="text-gray-400 font-normal">Generator</span></h1>
+        </div>
+        <div class="flex items-center gap-4 text-sm font-medium text-gray-400">
+            <span class="flex items-center gap-2"><i data-lucide="github" class="w-4 h-4"></i> GitHub Ready</span>
+            <span class="flex items-center gap-2"><i data-lucide="layout-template" class="w-4 h-4"></i> Notion Embed</span>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-1 grid grid-cols-1 lg:grid-cols-2 gap-0 overflow-hidden" style="height: calc(100vh - 73px);">
+        
+        <!-- Columna Izquierda: Formulario -->
+        <div class="p-6 overflow-y-auto border-r border-gray-800 bg-gray-950">
+            <h2 class="text-lg font-semibold mb-6 flex items-center gap-2">
+                <i data-lucide="settings-2" class="w-5 h-5 text-[#1ED760]"></i> Configuración de la Canción
+            </h2>
+
+            <div class="space-y-5">
+                <!-- Info Básica -->
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-400 mb-1">Título de la Canción</label>
+                        <input type="text" id="in-title" value="Drag Path" class="w-full rounded-md px-3 py-2 text-sm" placeholder="Ej: Stressed Out">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-400 mb-1">Artista</label>
+                        <input type="text" id="in-artist" value="Twenty One Pilots" class="w-full rounded-md px-3 py-2 text-sm" placeholder="Ej: Twenty One Pilots">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-400 mb-1">Color Base (HEX)</label>
+                        <div class="flex gap-2">
+                            <input type="color" id="in-color-picker" value="#A82417" class="h-9 w-12 rounded cursor-pointer bg-transparent border-0 p-0">
+                            <input type="text" id="in-color" value="#A82417" class="w-full rounded-md px-3 py-2 text-sm font-mono uppercase">
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-2">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-400 mb-1">Duración</label>
+                            <input type="text" id="in-duration" value="3:44" class="w-full rounded-md px-3 py-2 text-sm font-mono" placeholder="MM:SS">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-400 mb-1">Segundos</label>
+                            <input type="number" id="in-seconds" value="224" class="w-full rounded-md px-3 py-2 text-sm font-mono">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Letras -->
+                <div>
+                    <div class="flex items-center justify-between mb-1">
+                        <label class="block text-sm font-medium text-gray-400">Letras y Pronunciación</label>
+                        <span class="text-xs text-gray-500 bg-gray-900 px-2 py-1 rounded">Formato: [Segundo] | [Inglés] | [Pron] | [Español]</span>
+                    </div>
+                    <textarea id="in-lyrics" rows="12" class="w-full rounded-md px-3 py-3 text-sm font-mono whitespace-pre text-gray-300 leading-relaxed" placeholder="0
+When I see the devil's eyes
+Wuen ai si de devils ais
+Cuando veo los ojos del diablo
+
+4
+A current travels down my spine
+A corrent travels daun mai spain
+Un escalofrío recorre mi espalda"></textarea>
+                    <p class="text-xs text-gray-500 mt-2 flex items-start gap-1">
+                        <i data-lucide="info" class="w-4 h-4 shrink-0"></i>
+                        Separa cada bloque de texto con un salto de línea en blanco. Mantén el orden estricto de las 4 líneas por bloque.
+                    </p>
+                </div>
+
+                <button id="btn-generate" class="w-full bg-[#1ED760] hover:bg-[#1fdf64] text-black font-bold py-3 px-4 rounded-md transition-colors flex items-center justify-center gap-2 active:scale-[0.98]">
+                    <i data-lucide="zap" class="w-5 h-5 fill-current"></i> Generar Código HTML
+                </button>
+            </div>
+        </div>
+
+        <!-- Columna Derecha: Output y Guía -->
+        <div class="flex flex-col bg-gray-900 border-l border-gray-800">
+            
+            <!-- Tabs -->
+            <div class="flex border-b border-gray-800">
+                <button class="px-6 py-3 text-sm font-medium text-white border-b-2 border-[#1ED760] bg-gray-800/50">1. Código Generado</button>
+                <button class="px-6 py-3 text-sm font-medium text-gray-400 hover:text-white transition-colors cursor-default">2. Guía para Notion</button>
+            </div>
+
+            <!-- Editor de Código -->
+            <div class="flex-1 relative group p-4 overflow-hidden flex flex-col">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-xs font-mono text-gray-400" id="filename-preview">cancion.html</span>
+                    <button id="btn-copy" class="text-xs bg-gray-800 hover:bg-gray-700 text-white px-3 py-1.5 rounded flex items-center gap-1.5 transition-colors">
+                        <i data-lucide="copy" class="w-3.5 h-3.5"></i> Copiar Código
+                    </button>
+                </div>
+                <textarea id="out-code" readonly class="flex-1 w-full bg-[#0a0f18] text-[#a5b4fc] p-4 rounded-lg font-mono text-[13px] resize-none focus:ring-0 focus:border-gray-800 leading-relaxed"></textarea>
+            </div>
+
+            <!-- Instrucciones GitHub -> Notion -->
+            <div class="p-6 bg-gray-950 border-t border-gray-800">
+                <h3 class="text-sm font-bold text-white flex items-center gap-2 mb-3">
+                    <i data-lucide="workflow" class="w-4 h-4 text-[#1ED760]"></i> Ruta de Integración
+                </h3>
+                <ol class="text-sm text-gray-400 space-y-2 list-decimal list-inside marker:text-[#1ED760]">
+                    <li>Copia el código generado arriba.</li>
+                    <li>Ve a tu repo <span class="text-white font-mono bg-gray-800 px-1 rounded">JhJan/Songs-Lyrics</span> y crea un archivo nuevo.</li>
+                    <li>Pega el código, llámalo <span class="text-white font-mono bg-gray-800 px-1 rounded" id="guide-filename">cancion.html</span> y haz Commit.</li>
+                    <li>En <b>Notion</b>, escribe <code class="text-[#1ED760]">/embed</code> y pega esta URL exacta:</li>
+                </ol>
+                <div class="mt-3 p-3 bg-black border border-gray-800 rounded flex items-center justify-between">
+                    <code id="guide-url" class="text-[13px] text-gray-300 select-all font-mono">https://raw.githack.com/JhJan/Songs-Lyrics/main/cancion.html</code>
+                    <button id="btn-copy-url" class="text-gray-500 hover:text-white" title="Copiar URL">
+                        <i data-lucide="copy" class="w-4 h-4"></i>
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- La plantilla base de Spotify (Oculta) -->
+    <script id="template-html" type="text/plain">
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>%%TITLE%% - Spotify Premium UI</title>
+    <script src="https://cdn.tailwindcss.com"><\/script>
+    <script src="https://unpkg.com/lucide@latest"><\/script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+        body { font-family: 'Inter', sans-serif; background-color: #000; color: #fff; margin: 0; padding: 0; -webkit-font-smoothing: antialiased; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        .lyric-line { transition: opacity 0.4s ease-in-out, transform 0.4s ease-in-out; transform-origin: left center; }
+        .lyric-line.active { opacity: 1 !important; transform: scale(1.02); }
+        .lyric-line.inactive { opacity: 0.3; transform: scale(1); }
+        .toggle-btn.active { background-color: rgba(255, 255, 255, 0.2); color: white; border-color: transparent; }
+        .toggle-btn { background-color: transparent; color: rgba(255, 255, 255, 0.5); border: 1px solid rgba(255, 255, 255, 0.3); }
+        .bg-spotify-gradient { background: linear-gradient(180deg, %%COLOR%% 0%, #121212 60%, #121212 100%); }
+        .icon-solid { fill: currentColor; stroke: currentColor; }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen bg-black">
+    <div class="relative w-full max-w-[400px] h-[100dvh] sm:h-[850px] sm:rounded-[40px] overflow-hidden bg-spotify-gradient shadow-2xl flex flex-col">
+        <header class="flex items-center justify-between px-6 pt-12 pb-4 relative z-20">
+            <button class="p-2 -ml-2 text-white/80 hover:text-white active:scale-95 transition-transform"><i data-lucide="chevron-down" class="w-7 h-7"></i></button>
+            <div class="flex flex-col items-center">
+                <span class="text-xs font-bold tracking-widest text-white/80 uppercase">Letras</span>
+                <div class="flex items-center gap-2 mt-1">
+                    <button id="toggle-pron" class="toggle-btn active px-3 py-1 text-[10px] font-bold rounded-full transition-colors uppercase tracking-wider">Pron</button>
+                    <button id="toggle-esp" class="toggle-btn active px-3 py-1 text-[10px] font-bold rounded-full transition-colors uppercase tracking-wider">Esp</button>
+                </div>
+            </div>
+            <button class="p-2 -mr-2 text-white/80 hover:text-white active:scale-95 transition-transform"><i data-lucide="more-horizontal" class="w-7 h-7"></i></button>
+        </header>
+        <main id="lyrics-container" class="flex-1 overflow-y-auto no-scrollbar px-6 pb-72 pt-8 space-y-8 relative z-10 scroll-smooth"><div id="spacer-top" class="h-10"></div></main>
+        <footer class="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black via-[#121212] to-transparent pt-24 pb-8 px-6 z-30">
+            <div class="flex items-center justify-between mb-6">
+                <div class="flex items-center gap-4">
+                    <div class="w-[56px] h-[56px] rounded flex items-center justify-center shadow-md overflow-hidden relative" style="background-color: %%COLOR%%">
+                        <svg viewBox="0 0 100 100" class="w-12 h-12 fill-black/90 mt-2">
+                            <circle cx="50" cy="30" r="7" /><path d="M40 45 L60 45 L55 90 L45 90 Z" /><path d="M40 45 L15 15 L22 10 L45 38 Z" /><path d="M60 45 L85 15 L78 10 L55 38 Z" />
+                        </svg>
+                    </div>
+                    <div class="flex flex-col"><h2 class="text-[20px] font-bold text-white leading-tight tracking-tight">%%TITLE%%</h2><p class="text-[15px] text-white/70 font-medium mt-0.5">%%ARTIST%%</p></div>
+                </div>
+                <button class="w-6 h-6 rounded-full bg-[#1ED760] flex items-center justify-center text-black active:scale-95 transition-transform hover:scale-105"><i data-lucide="check" class="w-4 h-4 stroke-[3]"></i></button>
+            </div>
+            <div class="space-y-1.5 mb-6">
+                <div id="progress-container" class="w-full h-1 bg-white/20 rounded-full cursor-pointer relative group">
+                    <div id="progress-bar" class="h-full bg-white rounded-full w-0 relative transition-all duration-75"><div class="absolute right-0 top-1/2 -translate-y-1/2 w-3 h-3 bg-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity shadow-md"></div></div>
+                </div>
+                <div class="flex justify-between text-[11px] font-medium text-white/60 tracking-wide font-mono"><span id="current-time">0:00</span><span id="total-time">%%DURATION%%</span></div>
+            </div>
+            <div class="flex items-center justify-between mb-6 px-1">
+                <button class="text-[#1ED760] active:scale-90 transition-transform"><i data-lucide="shuffle" class="w-[22px] h-[22px] stroke-[2.5]"></i></button>
+                <button class="text-white active:scale-90 transition-transform"><i data-lucide="skip-back" class="w-9 h-9 icon-solid"></i></button>
+                <button id="play-btn" class="w-[64px] h-[64px] flex items-center justify-center bg-white rounded-full text-black hover:scale-105 active:scale-95 transition-transform shadow-xl">
+                    <i data-lucide="play" id="play-icon" class="w-8 h-8 ml-1 icon-solid"></i><i data-lucide="pause" id="pause-icon" class="w-8 h-8 hidden icon-solid"></i>
+                </button>
+                <button class="text-white active:scale-90 transition-transform"><i data-lucide="skip-forward" class="w-9 h-9 icon-solid"></i></button>
+                <button class="text-white/70 hover:text-white active:scale-90 transition-transform"><i data-lucide="timer" class="w-6 h-6"></i></button>
+            </div>
+            <div class="flex justify-between items-center px-1">
+                <button class="text-white/70 hover:text-white active:scale-90 transition-transform"><i data-lucide="monitor-speaker" class="w-5 h-5"></i></button>
+                <div class="flex gap-6">
+                    <button class="text-white/70 hover:text-white active:scale-90 transition-transform"><i data-lucide="share-2" class="w-5 h-5"></i></button>
+                    <button class="text-white/70 hover:text-white active:scale-90 transition-transform"><i data-lucide="list-music" class="w-5 h-5"></i></button>
+                </div>
+            </div>
+        </footer>
+    </div>
+    <script>
+        lucide.createIcons();
+        const lyricsData = %%LYRICS_JSON%%;
+        let isPlaying = false; let currentTime = 0; const totalDuration = %%SECONDS%%; let timerInterval; let activeIndex = -1; let showPron = true; let showEsp = true;
+        const container = document.getElementById('lyrics-container'); const playBtn = document.getElementById('play-btn'); const playIcon = document.getElementById('play-icon'); const pauseIcon = document.getElementById('pause-icon'); const progressBar = document.getElementById('progress-bar'); const progressContainer = document.getElementById('progress-container'); const currentTimeEl = document.getElementById('current-time'); const togglePronBtn = document.getElementById('toggle-pron'); const toggleEspBtn = document.getElementById('toggle-esp');
+        function renderLyrics() {
+            lyricsData.forEach((lyric, index) => {
+                const block = document.createElement('div'); block.className = 'lyric-line inactive cursor-pointer'; block.dataset.index = index;
+                block.innerHTML = \`<div class="text-[26px] font-bold text-white tracking-tight leading-tight mb-1 layer-en">\${lyric.en}</div><div class="text-[15px] italic text-white/50 layer-pron mb-1 transition-all duration-300 \${showPron ? 'block' : 'hidden'}">\${lyric.pron}</div><div class="text-[16px] text-white/70 layer-es transition-all duration-300 \${showEsp ? 'block' : 'hidden'}">\${lyric.es}</div>\`;
+                block.addEventListener('click', () => { currentTime = lyric.time; updatePlayerUI(); syncLyrics(); if(!isPlaying) togglePlay(); });
+                container.appendChild(block);
+            });
+            const spacerBottom = document.createElement('div'); spacerBottom.className = 'h-52'; container.appendChild(spacerBottom);
+        }
+        function formatTime(seconds) { const m = Math.floor(seconds / 60); const s = Math.floor(seconds % 60); return \`\${m}:\${s.toString().padStart(2, '0')}\`; }
+        function updatePlayerUI() { progressBar.style.width = \`\${(currentTime / totalDuration) * 100}%\`; currentTimeEl.textContent = formatTime(currentTime); }
+        function syncLyrics() {
+            let newActiveIndex = -1;
+            for (let i = 0; i < lyricsData.length; i++) { if (currentTime >= lyricsData[i].time) { newActiveIndex = i; } else { break; } }
+            if (newActiveIndex !== activeIndex && newActiveIndex !== -1) {
+                if (activeIndex !== -1) { const oldActive = container.children[activeIndex + 1]; oldActive.classList.remove('active'); oldActive.classList.add('inactive'); }
+                activeIndex = newActiveIndex; const newActiveEl = container.children[activeIndex + 1]; newActiveEl.classList.remove('inactive'); newActiveEl.classList.add('active');
+                newActiveEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        }
+        function togglePlay() {
+            isPlaying = !isPlaying;
+            if (isPlaying) {
+                playIcon.classList.add('hidden'); pauseIcon.classList.remove('hidden');
+                timerInterval = setInterval(() => { currentTime += 0.25; if (currentTime >= totalDuration) { currentTime = totalDuration; togglePlay(); } updatePlayerUI(); syncLyrics(); }, 250);
+            } else { playIcon.classList.remove('hidden'); pauseIcon.classList.add('hidden'); clearInterval(timerInterval); }
+        }
+        function updateLayersVisibility() { document.querySelectorAll('.layer-pron').forEach(el => el.style.display = showPron ? 'block' : 'none'); document.querySelectorAll('.layer-es').forEach(el => el.style.display = showEsp ? 'block' : 'none'); }
+        togglePronBtn.addEventListener('click', () => { showPron = !showPron; togglePronBtn.classList.toggle('active'); updateLayersVisibility(); });
+        toggleEspBtn.addEventListener('click', () => { showEsp = !showEsp; toggleEspBtn.classList.toggle('active'); updateLayersVisibility(); });
+        playBtn.addEventListener('click', togglePlay);
+        progressContainer.addEventListener('click', (e) => { const rect = progressContainer.getBoundingClientRect(); currentTime = (e.clientX - rect.left) / rect.width * totalDuration; updatePlayerUI(); syncLyrics(); });
+        renderLyrics(); updatePlayerUI(); syncLyrics();
+    <\/script>
+</body>
+</html>
+    </script>
+
+    <!-- Lógica del Generador -->
+    <script>
+        lucide.createIcons();
+
+        // Elementos UI
+        const inTitle = document.getElementById('in-title');
+        const inArtist = document.getElementById('in-artist');
+        const inColor = document.getElementById('in-color');
+        const inColorPicker = document.getElementById('in-color-picker');
+        const inDuration = document.getElementById('in-duration');
+        const inSeconds = document.getElementById('in-seconds');
+        const inLyrics = document.getElementById('in-lyrics');
+        const outCode = document.getElementById('out-code');
+        const btnGenerate = document.getElementById('btn-generate');
+        const btnCopy = document.getElementById('btn-copy');
+        
+        // Elementos Guía
+        const filenamePreview = document.getElementById('filename-preview');
+        const guideFilename = document.getElementById('guide-filename');
+        const guideUrl = document.getElementById('guide-url');
+        const btnCopyUrl = document.getElementById('btn-copy-url');
+
+        // Sincronizar Color Picker y Texto HEX
+        inColorPicker.addEventListener('input', (e) => inColor.value = e.target.value.toUpperCase());
+        inColor.addEventListener('input', (e) => inColorPicker.value = e.target.value);
+
+        // Convertir MM:SS a Segundos (Auto-completar)
+        inDuration.addEventListener('change', (e) => {
+            const parts = e.target.value.split(':');
+            if(parts.length === 2) {
+                inSeconds.value = parseInt(parts[0]) * 60 + parseInt(parts[1]);
+            }
+        });
+
+        // Parsear Texto de Letras a JSON
+        function parseLyrics(rawText) {
+            const blocks = rawText.trim().split(/\n\s*\n/);
+            const jsonArray = [];
+            
+            blocks.forEach(block => {
+                const lines = block.split('\n').map(l => l.trim()).filter(l => l !== '');
+                if(lines.length >= 4) {
+                    jsonArray.push({
+                        time: parseInt(lines[0]),
+                        en: lines[1],
+                        pron: lines[2],
+                        es: lines[3]
+                    });
+                }
+            });
+            return JSON.stringify(jsonArray, null, 4);
+        }
+
+        // Generar Código
+        btnGenerate.addEventListener('click', () => {
+            const template = document.getElementById('template-html').textContent;
+            
+            const title = inTitle.value.trim() || 'Song Title';
+            const artist = inArtist.value.trim() || 'Artist Name';
+            const color = inColor.value.trim() || '#1ED760';
+            const duration = inDuration.value.trim() || '0:00';
+            const seconds = inSeconds.value.trim() || '0';
+            
+            let lyricsJSON = "[]";
+            try {
+                lyricsJSON = parseLyrics(inLyrics.value);
+            } catch (e) {
+                alert("Error al parsear las letras. Asegúrate de seguir el formato.");
+                return;
+            }
+
+            // Reemplazar tokens
+            let finalHtml = template
+                .replace(/%%TITLE%%/g, title)
+                .replace(/%%ARTIST%%/g, artist)
+                .replace(/%%COLOR%%/g, color)
+                .replace(/%%DURATION%%/g, duration)
+                .replace(/%%SECONDS%%/g, seconds)
+                .replace(/%%LYRICS_JSON%%/g, lyricsJSON);
+
+            // Mostrar en el Textarea
+            outCode.value = finalHtml.trim();
+
+            // Actualizar Nombres de Archivo
+            const safeName = title.toLowerCase().replace(/[^a-z0-9]+/g, '-') + '.html';
+            filenamePreview.textContent = safeName;
+            guideFilename.textContent = safeName;
+            guideUrl.textContent = `https://raw.githack.com/JhJan/Songs-Lyrics/main/${safeName}`;
+
+            // Feedback visual
+            const originalText = btnGenerate.innerHTML;
+            btnGenerate.innerHTML = '<i data-lucide="check-circle" class="w-5 h-5"></i> ¡Código Generado!';
+            btnGenerate.classList.replace('bg-[#1ED760]', 'bg-white');
+            lucide.createIcons();
+            setTimeout(() => {
+                btnGenerate.innerHTML = originalText;
+                btnGenerate.classList.replace('bg-white', 'bg-[#1ED760]');
+                lucide.createIcons();
+            }, 2000);
+        });
+
+        // Copiar Código al Portapapeles
+        btnCopy.addEventListener('click', () => {
+            if(!outCode.value) return;
+            navigator.clipboard.writeText(outCode.value);
+            
+            const originalHtml = btnCopy.innerHTML;
+            btnCopy.innerHTML = '<i data-lucide="check" class="w-3.5 h-3.5"></i> Copiado';
+            btnCopy.classList.add('bg-green-600', 'text-white');
+            lucide.createIcons();
+            
+            setTimeout(() => {
+                btnCopy.innerHTML = originalHtml;
+                btnCopy.classList.remove('bg-green-600', 'text-white');
+                lucide.createIcons();
+            }, 2000);
+        });
+
+        // Copiar URL de Notion
+        btnCopyUrl.addEventListener('click', () => {
+            navigator.clipboard.writeText(guideUrl.textContent);
+            btnCopyUrl.innerHTML = '<i data-lucide="check" class="w-4 h-4 text-[#1ED760]"></i>';
+            lucide.createIcons();
+            setTimeout(() => {
+                btnCopyUrl.innerHTML = '<i data-lucide="copy" class="w-4 h-4"></i>';
+                lucide.createIcons();
+            }, 2000);
+        });
+
+        // Poblar letras de ejemplo al inicio
+        inLyrics.value = `0\nWhen I see the devil's eyes\nWuen ai si de devils ais\nCuando veo los ojos del diablo\n\n4\nA current travels down my spine\nA corrent travels daun mai spain\nUn escalofrío recorre mi espalda\n\n8\nHe found me\nJi faund mi\nÉl me encontró`;
+        btnGenerate.click(); // Generar una primera vez
+    </script>
