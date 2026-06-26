@@ -87,11 +87,16 @@
                 </div>
 
                 <div>
+                    <label class="block text-sm font-medium text-gray-400 mb-1">Imagen de Portada (URL o Archivo local)</label>
+                    <input type="text" id="in-image" value="https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?q=80&w=500&auto=format&fit=crop" class="w-full rounded-md px-3 py-2 text-sm" placeholder="Ej: cover.jpg o https://raw.githubusercontent.com/...">
+                </div>
+
+                <div>
                     <div class="flex items-center justify-between mb-1">
                         <label class="block text-sm font-medium text-gray-400">Letras y Pronunciación</label>
                         <span class="text-xs text-gray-500 bg-gray-900 px-2 py-1 rounded">Formato: [Segundo] | [Inglés] | [Pron] | [Español]</span>
                     </div>
-                    <textarea id="in-lyrics" rows="12" class="w-full rounded-md px-3 py-3 text-sm font-mono whitespace-pre text-gray-300 leading-relaxed" placeholder="0
+                    <textarea id="in-lyrics" rows="9" class="w-full rounded-md px-3 py-3 text-sm font-mono whitespace-pre text-gray-300 leading-relaxed" placeholder="0
 When I see the devil's eyes
 Wuen ai si de devils ais
 Cuando veo los ojos del diablo
@@ -192,13 +197,11 @@ Un escalofrío recorre mi espalda"></textarea>
         </header>
         <div class="flex-1 grid grid-cols-1 lg:grid-cols-12 overflow-hidden relative z-10 px-8 pb-32">
             <div class="lg:col-span-5 flex flex-col justify-center items-center lg:items-start text-center lg:text-left pb-6 lg:pb-0 lg:pr-8 border-b lg:border-b-0 lg:border-r border-white/10">
+                
                 <div class="w-[240px] h-[240px] md:w-[320px] md:h-[320px] rounded-xl shadow-2xl overflow-hidden relative group transition-transform duration-300 hover:scale-[1.02]" style="background-color: %%COLOR%%">
-                    <div class="w-full h-full flex items-center justify-center opacity-60">
-                        <svg viewBox="0 0 100 100" class="w-24 h-24 fill-black">
-                            <circle cx="50" cy="30" r="7" /><path d="M40 45 L60 45 L55 90 L45 90 Z" /><path d="M40 45 L15 15 L22 10 L45 38 Z" /><path d="M60 45 L85 15 L78 10 L55 38 Z" />
-                        </svg>
-                    </div>
+                    <img src="%%IMAGE_URL%%" alt="%%TITLE%% Cover" class="w-full h-full object-cover">
                 </div>
+
                 <div class="mt-6 w-full max-w-[320px]">
                     <div class="flex items-center justify-between gap-4">
                         <div class="truncate">
@@ -217,12 +220,14 @@ Un escalofrío recorre mi espalda"></textarea>
         </div>
         <footer class="absolute bottom-0 left-0 w-full bg-black/80 backdrop-blur-lg border-t border-white/10 py-4 px-8 z-30 flex flex-col sm:flex-row items-center justify-between gap-4">
             <div class="hidden sm:flex items-center gap-3 w-1/4">
-                <div class="w-10 h-10 rounded overflow-hidden flex items-center justify-center" style="background-color: %%COLOR%%">
-                    <i data-lucide="music" class="w-5 h-5 text-black/50"></i>
+                
+                <div class="w-14 h-14 rounded overflow-hidden flex items-center justify-center bg-gray-900 shadow-md">
+                    <img src="%%IMAGE_URL%%" alt="Mini Cover" class="w-full h-full object-cover">
                 </div>
-                <div class="flex flex-col truncate">
-                    <span class="text-sm font-bold text-white truncate">%%TITLE%%</span>
-                    <span class="text-xs text-white/60 truncate">%%ARTIST%%</span>
+                
+                <div class="flex flex-col truncate ml-1">
+                    <span class="text-sm font-bold text-white truncate hover:underline cursor-pointer">%%TITLE%%</span>
+                    <span class="text-xs text-white/60 truncate hover:underline cursor-pointer">%%ARTIST%%</span>
                 </div>
             </div>
             <div class="flex flex-col items-center gap-2 w-full sm:w-2/4 max-w-[500px]">
@@ -310,6 +315,7 @@ Un escalofrío recorre mi espalda"></textarea>
         const inColorPicker = document.getElementById('in-color-picker');
         const inDuration = document.getElementById('in-duration');
         const inSeconds = document.getElementById('in-seconds');
+        const inImage = document.getElementById('in-image'); // Referencia al nuevo input
         const inLyrics = document.getElementById('in-lyrics');
         const outCode = document.getElementById('out-code');
         const btnGenerate = document.getElementById('btn-generate');
@@ -362,6 +368,9 @@ Un escalofrío recorre mi espalda"></textarea>
             const duration = inDuration.value.trim() || '0:00';
             const seconds = inSeconds.value.trim() || '0';
             
+            // Si el campo de imagen está vacío, asigna una imagen oscura por defecto
+            const imageUrl = inImage.value.trim() || 'https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?q=80&w=500&auto=format&fit=crop';
+            
             let lyricsJSON = "[]";
             try {
                 lyricsJSON = parseLyrics(inLyrics.value);
@@ -370,14 +379,14 @@ Un escalofrío recorre mi espalda"></textarea>
                 return;
             }
 
-            // CORRECCIÓN FINAL: Formamos la etiqueta de cierre separando los caracteres
-            // para que el navegador no se confunda y cierre el script principal.
+            // Inyectamos todas las variables, incluyendo %%IMAGE_URL%%
             let finalHtml = template
                 .replace(/%%TITLE%%/g, title)
                 .replace(/%%ARTIST%%/g, artist)
                 .replace(/%%COLOR%%/g, color)
                 .replace(/%%DURATION%%/g, duration)
                 .replace(/%%SECONDS%%/g, seconds)
+                .replace(/%%IMAGE_URL%%/g, imageUrl)
                 .replace(/%%LYRICS_JSON%%/g, lyricsJSON)
                 .replace(/<\\\/script>/g, '<' + '/script>');
 
