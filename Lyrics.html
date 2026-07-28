@@ -70,8 +70,8 @@
                     <div>
                         <label class="block text-sm font-medium text-gray-400 mb-1">Color Base (HEX)</label>
                         <div class="flex gap-2">
-                            <input type="color" id="in-color-picker" value="#A82417" class="h-9 w-12 rounded cursor-pointer bg-transparent border-0 p-0">
-                            <input type="text" id="in-color" value="#A82417" class="w-full rounded-md px-3 py-2 text-sm font-mono uppercase">
+                            <input type="color" id="in-color-picker" value="#C43B2B" class="h-9 w-12 rounded cursor-pointer bg-transparent border-0 p-0">
+                            <input type="text" id="in-color" value="#C43B2B" class="w-full rounded-md px-3 py-2 text-sm font-mono uppercase">
                         </div>
                     </div>
                     <div class="grid grid-cols-2 gap-2">
@@ -174,15 +174,18 @@ Un escalofrío recorre mi espalda"></textarea>
         .lyric-line.inactive { opacity: 0.25; transform: scale(1); }
         .toggle-btn.active { background-color: rgba(255, 255, 255, 0.2); color: white; border-color: transparent; }
         .toggle-btn { background-color: transparent; color: rgba(255, 255, 255, 0.5); border: 1px solid rgba(255, 255, 255, 0.3); }
-        .bg-spotify-desktop-gradient { background: linear-gradient(135deg, %%COLOR%% 0%, #121212 60%, #121212 100%); }
+        /* Cambio clave: Color sólido puro sin degradados */
+        .bg-spotify-solid { background-color: %%COLOR%%; }
         .icon-solid { fill: currentColor; stroke: currentColor; }
     </style>
 </head>
 <body class="bg-black min-h-screen flex items-center justify-center p-0 sm:p-4 md:p-6 lg:p-8">
-    <div class="w-full max-w-[1280px] h-[100dvh] sm:h-[85vh] sm:min-h-[680px] sm:rounded-2xl overflow-hidden bg-spotify-desktop-gradient shadow-2xl flex flex-col relative">
-        <header class="w-full flex items-center justify-between px-8 py-6 relative z-20 bg-gradient-to-b from-black/40 to-transparent">
+    <!-- Aplicada la clase bg-spotify-solid en lugar de bg-spotify-desktop-gradient -->
+    <div class="w-full max-w-[1280px] h-[100dvh] sm:h-[85vh] sm:min-h-[680px] sm:rounded-2xl overflow-hidden bg-spotify-solid shadow-2xl flex flex-col relative">
+        <!-- Eliminado bg-gradient-to-b del header para mayor limpieza -->
+        <header class="w-full flex items-center justify-between px-8 py-6 relative z-20">
             <div class="flex items-center gap-4">
-                <button class="p-2 bg-black/40 rounded-full text-white/80 hover:text-white transition-colors"><i data-lucide="chevron-left" class="w-6 h-6"></i></button>
+                <button class="p-2 bg-black/20 rounded-full text-white/80 hover:text-white transition-colors"><i data-lucide="chevron-left" class="w-6 h-6"></i></button>
                 <div class="hidden md:flex flex-col">
                     <span class="text-xs font-bold tracking-widest text-white/60 uppercase">Reproduciendo</span>
                     <span class="text-sm font-bold text-white">%%TITLE%%</span>
@@ -315,7 +318,7 @@ Un escalofrío recorre mi espalda"></textarea>
         const inColorPicker = document.getElementById('in-color-picker');
         const inDuration = document.getElementById('in-duration');
         const inSeconds = document.getElementById('in-seconds');
-        const inImage = document.getElementById('in-image'); // Referencia al nuevo input
+        const inImage = document.getElementById('in-image'); 
         const inLyrics = document.getElementById('in-lyrics');
         const outCode = document.getElementById('out-code');
         const btnGenerate = document.getElementById('btn-generate');
@@ -368,7 +371,6 @@ Un escalofrío recorre mi espalda"></textarea>
             const duration = inDuration.value.trim() || '0:00';
             const seconds = inSeconds.value.trim() || '0';
             
-            // Si el campo de imagen está vacío, asigna una imagen oscura por defecto
             const imageUrl = inImage.value.trim() || 'https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?q=80&w=500&auto=format&fit=crop';
             
             let lyricsJSON = "[]";
@@ -379,7 +381,6 @@ Un escalofrío recorre mi espalda"></textarea>
                 return;
             }
 
-            // Inyectamos todas las variables, incluyendo %%IMAGE_URL%%
             let finalHtml = template
                 .replace(/%%TITLE%%/g, title)
                 .replace(/%%ARTIST%%/g, artist)
@@ -439,7 +440,9 @@ Un escalofrío recorre mi espalda"></textarea>
             }, 2000);
         });
 
-        // Poblar letras de ejemplo al inicio
+        // Poblar letras de ejemplo al inicio (Se ha cambiado el color del input por defecto a uno parecido a la imagen)
+        document.getElementById('in-color-picker').value = "#C43B2B";
+        document.getElementById('in-color').value = "#C43B2B";
         inLyrics.value = `0\nWhen I see the devil's eyes\nWuen ai si de devils ais\nCuando veo los ojos del diablo\n\n4\nA current travels down my spine\nA corrent travels daun mai spain\nUn escalofrío recorre mi espalda\n\n8\nHe found me\nJi faund mi\nÉl me encontró`;
         btnGenerate.click(); // Generar una primera vez
     </script>
