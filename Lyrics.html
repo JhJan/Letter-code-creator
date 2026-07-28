@@ -96,6 +96,7 @@
                         <label class="block text-sm font-medium text-gray-400">Letras y Pronunciación</label>
                         <span class="text-xs text-gray-500 bg-gray-900 px-2 py-1 rounded">Formato: [Segundo] | [Inglés] | [Pron] | [Español]</span>
                     </div>
+                    <!-- Se coloca el texto únicamente como placeholder para que el campo inicie vacío -->
                     <textarea id="in-lyrics" rows="9" class="w-full rounded-md px-3 py-3 text-sm font-mono whitespace-pre text-gray-300 leading-relaxed" placeholder="0
 When I see the devil's eyes
 Wuen ai si de devils ais
@@ -107,7 +108,7 @@ A corrent travels daun mai spain
 Un escalofrío recorre mi espalda"></textarea>
                     <p class="text-xs text-gray-500 mt-2 flex items-start gap-1">
                         <i data-lucide="info" class="w-4 h-4 shrink-0"></i>
-                        Separa cada bloque de texto con un salto de línea en blanco. Mantén el orden estricto de las 4 líneas por bloque.
+                        Separa cada bloque de texto con un salto de línea en blanco. Mantén el orden de líneas por bloque.
                     </p>
                 </div>
 
@@ -131,7 +132,7 @@ Un escalofrío recorre mi espalda"></textarea>
                         <i data-lucide="copy" class="w-3.5 h-3.5"></i> Copiar Código
                     </button>
                 </div>
-                <textarea id="out-code" readonly class="flex-1 w-full bg-[#0a0f18] text-[#a5b4fc] p-4 rounded-lg font-mono text-[13px] resize-none focus:ring-0 focus:border-gray-800 leading-relaxed" placeholder="El código HTML generado aparecerá aquí..."></textarea>
+                <textarea id="out-code" readonly class="flex-1 w-full bg-[#0a0f18] text-[#a5b4fc] p-4 rounded-lg font-mono text-[13px] resize-none focus:ring-0 focus:border-gray-800 leading-relaxed" placeholder="El código HTML generado aparecerá aquí al hacer clic en Generar..."></textarea>
             </div>
 
             <div class="p-6 bg-gray-950 border-t border-gray-800">
@@ -174,7 +175,8 @@ Un escalofrío recorre mi espalda"></textarea>
         .lyric-line.inactive { opacity: 0.25; transform: scale(1); }
         .toggle-btn.active { background-color: rgba(255, 255, 255, 0.2); color: white; border-color: transparent; }
         .toggle-btn { background-color: transparent; color: rgba(255, 255, 255, 0.5); border: 1px solid rgba(255, 255, 255, 0.3); }
-        /* Color sólido puro sin degradados */
+        
+        /* Fondo minimalista de color sólido (sin degradados) */
         .bg-spotify-solid { background-color: %%COLOR%%; }
         .icon-solid { fill: currentColor; stroke: currentColor; }
     </style>
@@ -347,20 +349,32 @@ Un escalofrío recorre mi espalda"></textarea>
             }
         });
 
-        // Parsear Texto de Letras a JSON
+        // Generar dinámicamente el nombre de archivo y URL en la UI mientras el usuario escribe
+        function updateFileNameUI() {
+            const titleValue = inTitle.value.trim() || 'cancion';
+            const safeName = titleValue.replace(/\s+/g, '-').replace(/[^a-zA-Z0-9-]/g, '') + '.html';
+            filenamePreview.textContent = safeName;
+            guideFilename.textContent = safeName;
+            guideUrl.textContent = `https://jhjan.github.io/Songs-Lyrics/${safeName}`;
+        }
+        inTitle.addEventListener('input', updateFileNameUI);
+
+        // Parsear Texto de Letras a JSON (VERSIÓN MEJORADA)
+        // Ahora no falla si un bloque tiene menos de 4 líneas
         function parseLyrics(rawText) {
-            if(!rawText.trim()) return "[]";
+            if(!rawText || !rawText.trim()) return "[]";
             const blocks = rawText.trim().split(/\n\s*\n/);
             const jsonArray = [];
             
             blocks.forEach(block => {
                 const lines = block.split('\n').map(l => l.trim()).filter(l => l !== '');
-                if(lines.length >= 4) {
+                // Se cambió a >= 2 para que al menos guarde el tiempo y el texto principal sin romperse
+                if(lines.length >= 2) {
                     jsonArray.push({
-                        time: parseInt(lines[0]),
-                        en: lines[1],
-                        pron: lines[2],
-                        es: lines[3]
+                        time: parseInt(lines[0]) || 0,
+                        en: lines[1] || '',
+                        pron: lines[2] || '',
+                        es: lines[3] || ''
                     });
                 }
             });
@@ -371,9 +385,10 @@ Un escalofrío recorre mi espalda"></textarea>
         btnGenerate.addEventListener('click', () => {
             const template = document.getElementById('template-html').textContent;
             
-            const title = inTitle.value.trim() || 'Song Title';
-            const artist = inArtist.value.trim() || 'Artist Name';
-            const color = inColor.value.trim() || '#1ED760';
+            // Asignar valores ingresados o usar valores por defecto visuales para que no se rompa la UI final
+            const title = inTitle.value.trim() || 'Título de la Canción';
+            const artist = inArtist.value.trim() || 'Artista Desconocido';
+            const color = inColor.value.trim() || inColorPicker.value;
             const duration = inDuration.value.trim() || '0:00';
             const seconds = inSeconds.value.trim() || '0';
             const imageUrl = inImage.value.trim() || 'https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?q=80&w=500&auto=format&fit=crop';
@@ -382,31 +397,26 @@ Un escalofrío recorre mi espalda"></textarea>
             try {
                 lyricsJSON = parseLyrics(inLyrics.value);
             } catch (e) {
-                alert("Error al parsear las letras. Asegúrate de seguir el formato.");
+                alert("Error al parsear las letras. Revisa el formato.");
                 return;
             }
 
+            // Uso de funciones () => valor, para evitar que caracteres como $ en las letras corrompan el código
             let finalHtml = template
-                .replace(/%%TITLE%%/g, title)
-                .replace(/%%ARTIST%%/g, artist)
-                .replace(/%%COLOR%%/g, color)
-                .replace(/%%DURATION%%/g, duration)
-                .replace(/%%SECONDS%%/g, seconds)
-                .replace(/%%IMAGE_URL%%/g, imageUrl)
-                .replace(/%%LYRICS_JSON%%/g, lyricsJSON)
-                .replace(/<\\\/script>/g, '<' + '/script>');
+                .replace(/%%TITLE%%/g, () => title)
+                .replace(/%%ARTIST%%/g, () => artist)
+                .replace(/%%COLOR%%/g, () => color)
+                .replace(/%%DURATION%%/g, () => duration)
+                .replace(/%%SECONDS%%/g, () => seconds)
+                .replace(/%%IMAGE_URL%%/g, () => imageUrl)
+                .replace(/%%LYRICS_JSON%%/g, () => lyricsJSON)
+                .replace(/<\\\/script>/g, () => '<' + '/script>');
 
             // Mostrar en el Textarea
             outCode.value = finalHtml.trim();
 
-            // Actualizar Nombres de Archivo y Enlace (Preservando mayúsculas y minúsculas)
-            const safeName = title.trim().replace(/\s+/g, '-').replace(/[^a-zA-Z0-9-]/g, '') + '.html';
-            
-            filenamePreview.textContent = safeName;
-            guideFilename.textContent = safeName;
-            
-            // Nueva ruta de integración según lo solicitado
-            guideUrl.textContent = `https://jhjan.github.io/Songs-Lyrics/${safeName}`;
+            // Refrescar el nombre y la URL
+            updateFileNameUI();
 
             // Feedback visual
             const originalText = btnGenerate.innerHTML;
@@ -448,6 +458,9 @@ Un escalofrío recorre mi espalda"></textarea>
             }, 2000);
         });
 
+        // Se elimina la precarga automática de información para que inicie limpio
+        // Al cargar la página de cero, inicializamos la UI visualmente
+        updateFileNameUI();
     </script>
 </body>
 </html>
