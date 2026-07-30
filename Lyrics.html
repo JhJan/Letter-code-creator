@@ -25,7 +25,6 @@
         textarea, input { background-color: #111827; border: 1px solid #374151; color: white; }
         textarea:focus, input:focus { border-color: #1ED760; outline: none; box-shadow: 0 0 0 1px #1ED760; }
         
-        /* Scrollbar oscura para el código */
         ::-webkit-scrollbar { width: 8px; height: 8px; }
         ::-webkit-scrollbar-track { background: #111827; }
         ::-webkit-scrollbar-thumb { background: #374151; border-radius: 4px; }
@@ -88,27 +87,23 @@
 
                 <div>
                     <label class="block text-sm font-medium text-gray-400 mb-1">Imagen de Portada (URL o Archivo local)</label>
-                    <input type="text" id="in-image" value="" class="w-full rounded-md px-3 py-2 text-sm" placeholder="Ej: cover.jpg o https://raw.githubusercontent.com/...">
+                    <input type="text" id="in-image" value="" class="w-full rounded-md px-3 py-2 text-sm" placeholder="Ej: drag-path-cover.jpg">
                 </div>
 
                 <div>
                     <div class="flex items-center justify-between mb-1">
                         <label class="block text-sm font-medium text-gray-400">Letras y Pronunciación</label>
-                        <span class="text-xs text-gray-500 bg-gray-900 px-2 py-1 rounded">Formato: [Segundo] | [Inglés] | [Pron] | [Español]</span>
+                        <span class="text-xs text-gray-500 bg-gray-900 px-2 py-1 rounded">Flex: [Tiempo?] | Inglés | [Pron?] | [Español?]</span>
                     </div>
-                    <!-- Se coloca el texto únicamente como placeholder para que el campo inicie vacío -->
-                    <textarea id="in-lyrics" rows="9" class="w-full rounded-md px-3 py-3 text-sm font-mono whitespace-pre text-gray-300 leading-relaxed" placeholder="0
-When I see the devil's eyes
-Wuen ai si de devils ais
-Cuando veo los ojos del diablo
+                    <textarea id="in-lyrics" rows="9" class="w-full rounded-md px-3 py-3 text-sm font-mono whitespace-pre text-gray-300 leading-relaxed" placeholder="Opcional: 0 (o 0:00)
+Inglés (Requerido)
+Pronunciación (Opcional)
+Español (Opcional)
 
-4
-A current travels down my spine
-A corrent travels daun mai spain
-Un escalofrío recorre mi espalda"></textarea>
+Puedes usar solo 2 líneas (Inglés y Español) y el generador lo entenderá automáticamente."></textarea>
                     <p class="text-xs text-gray-500 mt-2 flex items-start gap-1">
                         <i data-lucide="info" class="w-4 h-4 shrink-0"></i>
-                        Separa cada bloque de texto con un salto de línea en blanco. Mantén el orden de líneas por bloque.
+                        Separa cada bloque de texto con un salto de línea. El generador detectará automáticamente si omites el tiempo o la pronunciación.
                     </p>
                 </div>
 
@@ -176,7 +171,6 @@ Un escalofrío recorre mi espalda"></textarea>
         .toggle-btn.active { background-color: rgba(255, 255, 255, 0.2); color: white; border-color: transparent; }
         .toggle-btn { background-color: transparent; color: rgba(255, 255, 255, 0.5); border: 1px solid rgba(255, 255, 255, 0.3); }
         
-        /* Fondo minimalista de color sólido (sin degradados) */
         .bg-spotify-solid { background-color: %%COLOR%%; }
         .icon-solid { fill: currentColor; stroke: currentColor; }
     </style>
@@ -274,15 +268,25 @@ Un escalofrío recorre mi espalda"></textarea>
                 const block = document.createElement('div');
                 block.className = 'lyric-line inactive cursor-pointer py-1';
                 block.dataset.index = index;
-                block.innerHTML = `
-                    <div class="text-[24px] md:text-[28px] font-bold text-white tracking-tight leading-tight mb-1.5 layer-en">${lyric.en}</div>
-                    <div class="text-[14px] md:text-[15px] italic text-white/50 layer-pron mb-1 transition-all duration-300 ${showPron ? 'block' : 'hidden'}">${lyric.pron}</div>
-                    <div class="text-[15px] md:text-[16px] text-white/70 layer-es transition-all duration-300 ${showEsp ? 'block' : 'hidden'}">${lyric.es}</div>
-                `;
+                
+                let htmlContent = '';
+                // Solo renderiza la capa si hay contenido disponible
+                if(lyric.en) {
+                    htmlContent += `<div class="text-[24px] md:text-[28px] font-bold text-white tracking-tight leading-tight mb-1.5 layer-en">${lyric.en}</div>`;
+                }
+                if(lyric.pron) {
+                    htmlContent += `<div class="text-[14px] md:text-[15px] italic text-white/50 layer-pron mb-1 transition-all duration-300 ${showPron ? 'block' : 'hidden'}">${lyric.pron}</div>`;
+                }
+                if(lyric.es) {
+                    htmlContent += `<div class="text-[15px] md:text-[16px] text-white/70 layer-es transition-all duration-300 ${showEsp ? 'block' : 'hidden'}">${lyric.es}</div>`;
+                }
+                
+                block.innerHTML = htmlContent;
                 block.addEventListener('click', () => { block.scrollIntoView({ behavior: 'smooth', block: 'start' }); });
                 container.appendChild(block);
             });
         }
+        
         function updateLayersVisibility() {
             document.querySelectorAll('.layer-pron').forEach(el => el.style.display = showPron ? 'block' : 'none');
             document.querySelectorAll('.layer-es').forEach(el => el.style.display = showEsp ? 'block' : 'none');
@@ -302,6 +306,7 @@ Un escalofrío recorre mi espalda"></textarea>
             }, observerOptions);
             document.querySelectorAll('.lyric-line').forEach(line => observer.observe(line));
         }
+        
         renderLyrics();
         initManualScrollSync(); 
     <\/script>
@@ -341,7 +346,7 @@ Un escalofrío recorre mi espalda"></textarea>
             }
         });
 
-        // Convertir MM:SS a Segundos (Auto-completar)
+        // Convertir MM:SS a Segundos
         inDuration.addEventListener('change', (e) => {
             const parts = e.target.value.split(':');
             if(parts.length === 2) {
@@ -349,7 +354,6 @@ Un escalofrío recorre mi espalda"></textarea>
             }
         });
 
-        // Generar dinámicamente el nombre de archivo y URL en la UI mientras el usuario escribe
         function updateFileNameUI() {
             const titleValue = inTitle.value.trim() || 'cancion';
             const safeName = titleValue.replace(/\s+/g, '-').replace(/[^a-zA-Z0-9-]/g, '') + '.html';
@@ -359,8 +363,7 @@ Un escalofrío recorre mi espalda"></textarea>
         }
         inTitle.addEventListener('input', updateFileNameUI);
 
-        // Parsear Texto de Letras a JSON (VERSIÓN MEJORADA)
-        // Ahora no falla si un bloque tiene menos de 4 líneas
+        // Nuevo Parser Inteligente para las letras
         function parseLyrics(rawText) {
             if(!rawText || !rawText.trim()) return "[]";
             const blocks = rawText.trim().split(/\n\s*\n/);
@@ -368,15 +371,35 @@ Un escalofrío recorre mi espalda"></textarea>
             
             blocks.forEach(block => {
                 const lines = block.split('\n').map(l => l.trim()).filter(l => l !== '');
-                // Se cambió a >= 2 para que al menos guarde el tiempo y el texto principal sin romperse
-                if(lines.length >= 2) {
-                    jsonArray.push({
-                        time: parseInt(lines[0]) || 0,
-                        en: lines[1] || '',
-                        pron: lines[2] || '',
-                        es: lines[3] || ''
-                    });
+                if(lines.length === 0) return;
+                
+                let time = 0;
+                
+                // Detectar si la primera línea es tiempo (MM:SS o Segundos Puros)
+                const timeMatch = lines[0].match(/^(\d+):(\d+)$/);
+                if (timeMatch) {
+                    time = parseInt(timeMatch[1]) * 60 + parseInt(timeMatch[2]);
+                    lines.shift(); // Quita el tiempo para dejar solo las letras
+                } else if (/^\d+$/.test(lines[0])) {
+                    time = parseInt(lines[0]);
+                    lines.shift(); // Quita el tiempo para dejar solo las letras
                 }
+                
+                let en = "", pron = "", es = "";
+                
+                // Asignar dinámicamente según la cantidad de líneas restantes
+                if (lines.length >= 3) {
+                    en = lines[0];
+                    pron = lines[1];
+                    es = lines.slice(2).join(' '); // Une las líneas sobrantes si las hay
+                } else if (lines.length === 2) {
+                    en = lines[0];
+                    es = lines[1]; // Si solo hay 2, asume Inglés y Español
+                } else if (lines.length === 1) {
+                    en = lines[0]; // Si hay 1, asume solo Inglés
+                }
+                
+                jsonArray.push({ time, en, pron, es });
             });
             return JSON.stringify(jsonArray, null, 4);
         }
@@ -385,7 +408,6 @@ Un escalofrío recorre mi espalda"></textarea>
         btnGenerate.addEventListener('click', () => {
             const template = document.getElementById('template-html').textContent;
             
-            // Asignar valores ingresados o usar valores por defecto visuales para que no se rompa la UI final
             const title = inTitle.value.trim() || 'Título de la Canción';
             const artist = inArtist.value.trim() || 'Artista Desconocido';
             const color = inColor.value.trim() || inColorPicker.value;
@@ -401,7 +423,6 @@ Un escalofrío recorre mi espalda"></textarea>
                 return;
             }
 
-            // Uso de funciones () => valor, para evitar que caracteres como $ en las letras corrompan el código
             let finalHtml = template
                 .replace(/%%TITLE%%/g, () => title)
                 .replace(/%%ARTIST%%/g, () => artist)
@@ -412,13 +433,9 @@ Un escalofrío recorre mi espalda"></textarea>
                 .replace(/%%LYRICS_JSON%%/g, () => lyricsJSON)
                 .replace(/<\\\/script>/g, () => '<' + '/script>');
 
-            // Mostrar en el Textarea
             outCode.value = finalHtml.trim();
-
-            // Refrescar el nombre y la URL
             updateFileNameUI();
 
-            // Feedback visual
             const originalText = btnGenerate.innerHTML;
             btnGenerate.innerHTML = '<i data-lucide="check-circle" class="w-5 h-5"></i> ¡Código Generado!';
             btnGenerate.classList.replace('bg-[#1ED760]', 'bg-white');
@@ -458,8 +475,6 @@ Un escalofrío recorre mi espalda"></textarea>
             }, 2000);
         });
 
-        // Se elimina la precarga automática de información para que inicie limpio
-        // Al cargar la página de cero, inicializamos la UI visualmente
         updateFileNameUI();
     </script>
 </body>
